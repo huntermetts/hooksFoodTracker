@@ -22,6 +22,27 @@ const styles = {
 function App(props) {
   const [isFoodFactsOpen, setFoodFactsOpen] = useState(false)
   const [userFoodValue, setUserFoodValue] = useState('')
+  const [foodResults, setFoodResults] = useState([])
+
+  function getFoodFacts(){
+    setFoodFactsOpen(true)
+
+    return fetch('https://trackapi.nutritionix.com/v2/search/instant?query=' + userFoodValue, {
+      method: "GET",
+      headers: {
+        'x-app-id': 'c9034a39',
+        'x-app-key': '64d328bb4e36762198550465fdadf57e',
+      }
+  })
+  .then((response) => response.json())
+  .then((responseJson) => {
+      setFoodResults(responseJson.branded)
+  })
+  }
+
+  function closeFoodFacts(){
+    setFoodFactsOpen(false)
+  }
 
   const { classes, children, className, ...other } = props;
   return (
@@ -35,7 +56,7 @@ function App(props) {
         <Typography style={{color:'white', fontFamily:'quicksand'}}>search for a food here</Typography>
         <Input onChange={(e) => setUserFoodValue(e.target.value)} style={{color:'white', fontFamily:'quicksand'}}></Input>
 
-        <Button className={clsx(classes.root, className)} {...other} onClick={() => setFoodFactsOpen(true)}>
+        <Button className={clsx(classes.root, className)} {...other} onClick={() => getFoodFacts()}>
           {children || 'go'}
         </Button>
 
@@ -43,15 +64,20 @@ function App(props) {
       {userFoodValue !== '' ?
               <Dialog
                 open={isFoodFactsOpen}
-                onClose={() => setFoodFactsOpen(false)}
+                onClose={() => closeFoodFacts()}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 maxWidth='sm'
                 fullWidth={true}>
-                <DialogTitle id="alert-dialog-title" titleStyle={{ textAlign: "center" }}>Results for {userFoodValue}</DialogTitle>
+                <DialogTitle id="alert-dialog-title" style={{ textAlign: "center" }}>Results for {userFoodValue}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                      
+                    {foodResults.map((item, key) => {
+                        console.log(item)
+                        return (
+                            <Typography key={key}>Food Name: {item.food_name}</Typography>
+                        )
+                    })}
                     </DialogContentText>
                 </DialogContent>
               </Dialog>
