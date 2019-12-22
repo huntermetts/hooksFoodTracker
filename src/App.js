@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import logo from './assets/lettuce.svg';
 import PropTypes from 'prop-types';
-import { Input, Button, Typography, Dialog, DialogTitle, DialogContent, DialogContentText} from '@material-ui/core';
+import { Input, Button, Typography, Dialog, DialogTitle, DialogContent, DialogContentText,
+  Card, CardContent, CardActions, CardMedia
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import './App.css';
@@ -23,6 +25,7 @@ function App(props) {
   const [isFoodFactsOpen, setFoodFactsOpen] = useState(false)
   const [userFoodValue, setUserFoodValue] = useState('')
   const [foodResults, setFoodResults] = useState([])
+  const [calorieCount, setCalorieCount] = useState(0)
 
   function getFoodFacts(){
     setFoodFactsOpen(true)
@@ -48,6 +51,7 @@ function App(props) {
   return (
     <div className="App">
       <header className="App-header">
+        <p style={{position:'absolute', top:50, right:150, fontSize:20}}>Caloric Total:</p>
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           lettuce.io
@@ -60,22 +64,38 @@ function App(props) {
           {children || 'go'}
         </Button>
 
-
       {userFoodValue !== '' ?
               <Dialog
                 open={isFoodFactsOpen}
                 onClose={() => closeFoodFacts()}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-                maxWidth='sm'
+                maxWidth='lg'
                 fullWidth={true}>
-                <DialogTitle id="alert-dialog-title" style={{ textAlign: "center" }}>Results for {userFoodValue}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
+                  <Typography className={classes.pos} style={{fontFamily:'quicksand', fontSize:16}}>
+                                Results for "{userFoodValue}":
+                  </Typography>
+                    <DialogContentText style={{display: 'flex', justifyContent:'center', margin:10, flexWrap:'wrap'}}>
                     {foodResults.map((item, key) => {
-                        console.log(item)
+                      console.log(item)
                         return (
-                            <Typography key={key}>Food Name: {item.food_name}</Typography>
+                          <Card style={{width:345, margin: 20}}>
+                          <CardContent>
+                            <Typography variant="h5" component="h2" style={{fontFamily:'quicksand'}}>
+                             {item.brand_name_item_name}
+                            </Typography>
+                            <Typography className={classes.pos} color="textSecondary" style={{fontFamily:'quicksand'}}>
+                              Calories: {item.nf_calories}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary" component="p" style={{fontFamily:'quicksand'}}>
+                              Serving Size: {item.serving_qty}
+                            </Typography>
+                          </CardContent>
+                          <CardActions>
+                            <Button size="small" style={{fontFamily:'quicksand'}}>add</Button>
+                          </CardActions>
+                        </Card>
                         )
                     })}
                     </DialogContentText>
