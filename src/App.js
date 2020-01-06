@@ -51,7 +51,9 @@ function App(props) {
   return (
     <div className="App">
       <header className="App-header">
-        <p style={{position:'absolute', top:50, right:150, fontSize:20}}>Caloric Total:</p>
+        <p style={{position:'absolute', top:50, right:150, fontSize:20}}>Caloric Total: {calorieCount}</p>
+        <Button size="small" style={{fontFamily:'quicksand', position:'absolute', top:100, right:150, color:'white'}} onClick={()=>console.log('here')}>view items</Button>
+
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           lettuce.io
@@ -79,6 +81,7 @@ function App(props) {
                     <DialogContentText style={{display: 'flex', justifyContent:'center', margin:10, flexWrap:'wrap'}}>
                     {foodResults.map((item, key) => {
                       console.log(item)
+                      let calories = item.nf_calories
                         return (
                           <Card style={{width:345, margin: 20}}>
                           <CardContent>
@@ -93,7 +96,7 @@ function App(props) {
                             </Typography>
                           </CardContent>
                           <CardActions>
-                            <Button size="small" style={{fontFamily:'quicksand'}}>add</Button>
+                            <Button size="small" style={{fontFamily:'quicksand'}} onClick={() => {setCalorieCount(calorieCount + calories); closeFoodFacts(); }}>add</Button>
                           </CardActions>
                         </Card>
                         )
